@@ -48,7 +48,7 @@ export const register = async (req, res) => {
       otp,
     });
 
-    res.status(201).json({
+    res.status(200).json({
       user: {
         id: newUser.id,
         username: newUser.username,
