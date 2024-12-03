@@ -1,29 +1,39 @@
-import bcrypt from 'bcrypt';
-import User from '../models/user.js';
-import generateOtp from '../utils/generateOtp.js';
+import bcrypt from "bcrypt";
+import User from "../models/user.js";
+import generateOtp from "../utils/generateOtp.js";
 
 export const register = async (req, res) => {
-  const requiredFields = ['email', 'firstName', 'lastName', 'gender', 'countryCode', 'phoneNumber'];
+  const requiredFields = [
+    "email",
+    "firstName",
+    "lastName",
+    "gender",
+    "countryCode",
+    "phoneNumber",
+  ];
   const missingFields = requiredFields.filter((field) => !req.body[field]);
 
   if (missingFields.length > 0) {
     return res.status(400).json({
-      message: 'Validation Error',
+      message: "Validation Error",
       missingFields,
     });
   }
 
-  const { email, firstName, lastName, gender, countryCode, phoneNumber } = req.body;
+  const { email, firstName, lastName, gender, countryCode, phoneNumber } =
+    req.body;
 
   try {
     const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists with the provided email.' });
+      return res
+        .status(400)
+        .json({ message: "User already exists with the provided email." });
     }
 
     const username = email;
-    const password = await bcrypt.hash('defaultPassword123', 10);
+    const password = await bcrypt.hash("Novel123", 10);
     const otp = generateOtp();
 
     const newUser = await User.create({
@@ -57,6 +67,8 @@ export const register = async (req, res) => {
       otp,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error registering user', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error registering user", error: error.message });
   }
 };
